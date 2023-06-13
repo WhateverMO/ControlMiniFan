@@ -86,12 +86,12 @@ class MyServerCallbacks : public BLEServerCallbacks
 #define USE_SERIAL Serial
 #define DEBUG_ESP_PORT Serial
 // #define WS_SERVER "192.168.1.121"
-#define WS_SERVER "192.168.43.254"
+#define WS_SERVER "172.20.10.3"
 #define WS_PORT 5000
 // #define WS_SSID "dzkj-2020"
 // #define WS_PASSWORD "123abc.."
-#define WS_SSID "TMWs"
-#define WS_PASSWORD "5236427t@"
+#define WS_SSID "MINH-iPhone"
+#define WS_PASSWORD "02xl02xl"
 #define USE_SSL false
 
 
@@ -564,7 +564,7 @@ void loop()
         delay(500);                  // 留时间给蓝牙缓冲
         pServer->startAdvertising(); // 重新广播
         Serial.println(" Start Advertising... ");
-        oldDeviceCon                         nected = deviceConnected;
+        oldDeviceConnected = deviceConnected;
     }
 
     // connecting  正在连接
