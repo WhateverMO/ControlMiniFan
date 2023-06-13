@@ -1,0 +1,1 @@
+<view><view class="content"><image class="logo" src="/static/fan.png"></image></view><view class="text-area"><text class="title">{{title}}</text></view><view class="uni-padding-wrap uni-common-mt"><view class="uni-btn-v"><button type="primary" data-event-opts="{{[['tap',[['toLogin',['$event']]]]]}}" bindtap="__e">用户登录/注册</button></view></view></view>

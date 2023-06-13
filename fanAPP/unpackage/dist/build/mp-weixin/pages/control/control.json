@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "控制页面",
+  "usingComponents": {
+    "page-head": "/components/page-head/page-head"
+  }
+}

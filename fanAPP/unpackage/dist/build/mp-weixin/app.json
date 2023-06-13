@@ -1,0 +1,21 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/index/index1",
+    "pages/API/bluetooth",
+    "pages/Login/login",
+    "pages/control/control",
+    "pages/API/Bind",
+    "pages/Register/Register",
+    "pages/control/wificontrol",
+    "pages/WIFI/wifi"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {}
+}
