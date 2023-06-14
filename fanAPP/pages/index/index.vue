@@ -25,7 +25,6 @@
 			return {
 				disabled: [false, false, false, true, true, true, true, true, true, true, true, false],
 				title: 'Hello,',
-				time: '12:00',
 			}
 		},
 		onLoad() {

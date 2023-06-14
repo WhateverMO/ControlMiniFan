@@ -3446,12 +3446,74 @@ var render = function () {
                 [_vm._v("定时启动")]
               ),
               _c(
+                "uni-view",
+                { staticClass: _vm._$g(19, "sc"), attrs: { _i: 19 } },
+                [_vm._v("自定义持续时间")]
+              ),
+              _c(
+                "uni-view",
+                { staticClass: _vm._$g(20, "sc"), attrs: { _i: 20 } },
+                [
+                  _c(
+                    "uni-view",
+                    { staticClass: _vm._$g(21, "sc"), attrs: { _i: 21 } },
+                    [
+                      _c(
+                        "uni-view",
+                        { staticClass: _vm._$g(22, "sc"), attrs: { _i: 22 } },
+                        [_vm._v("当前选择")]
+                      ),
+                      _c(
+                        "uni-view",
+                        { staticClass: _vm._$g(23, "sc"), attrs: { _i: 23 } },
+                        [
+                          _c(
+                            "v-uni-picker",
+                            {
+                              attrs: {
+                                mode: "selector",
+                                range: _vm._$g(24, "a-range"),
+                                _i: 24,
+                              },
+                              on: {
+                                change: function ($event) {
+                                  return _vm.$handleViewEvent($event)
+                                },
+                              },
+                            },
+                            [
+                              _c(
+                                "uni-view",
+                                {
+                                  staticClass: _vm._$g(25, "sc"),
+                                  attrs: { _i: 25 },
+                                },
+                                [_vm._v(_vm._$g(25, "t0-0"))]
+                              ),
+                            ],
+                            1
+                          ),
+                        ],
+                        1
+                      ),
+                      _c(
+                        "uni-view",
+                        { staticClass: _vm._$g(26, "sc"), attrs: { _i: 26 } },
+                        [_vm._v("分钟")]
+                      ),
+                    ],
+                    1
+                  ),
+                ],
+                1
+              ),
+              _c(
                 "v-uni-button",
                 {
                   attrs: {
                     type: "primary",
-                    disabled: _vm._$g(19, "a-disabled"),
-                    _i: 19,
+                    disabled: _vm._$g(27, "a-disabled"),
+                    _i: 27,
                   },
                   on: {
                     click: function ($event) {
@@ -3459,7 +3521,7 @@ var render = function () {
                     },
                   },
                 },
-                [_vm._v("关闭风扇")]
+                [_vm._v("设置持续时间")]
               ),
             ],
             1

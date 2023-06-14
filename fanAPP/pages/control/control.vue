@@ -40,8 +40,24 @@
 				<button type="primary" :disabled="disabled[11]" @click="lazyStart">
 					定时启动
 				</button>
-				<button type="primary" :disabled="disabled[11]" @click="offGear">
-					关闭风扇
+				<view class="uni-title uni-common-pl">自定义持续时间</view>
+				<view class="uni-list">
+					<view class="uni-list-cell">
+						<view class="uni-list-cell-left">
+									当前选择
+						</view>
+						<view class="uni-list-cell-db">
+							<picker mode="selector" :range="time_range" @change="bindSusTimeChange">
+								<view class="uni-input">{{susTime}}</view>
+							</picker>
+						</view>
+						<view class="uni-list-cell-left">
+									分钟
+						</view>
+					</view>
+				</view>
+				<button type="primary" :disabled="disabled[11]" @click="setSusTime">
+					设置持续时间
 				</button>
 			</view>
 		</view>
@@ -51,6 +67,11 @@
 	import config from '@/config.js';
 	export default {
 		data() {
+			var time_range=[];
+			for(let i=0;i<=30;i++)
+			{
+				time_range.push(i);
+			}
 			return {
 				title: '风扇控制',
 				disabled: [false, false, false, true, true, true, true, true, true, true, true, false],
@@ -69,7 +90,9 @@
 				valueChangeData: {},
 				isStop: true,
 				list: [],
-				time:"12:00"
+				susTime: 0,
+				time:"12:00",
+				time_range:time_range
 			};
 		},
 		onLoad(option) {
@@ -145,6 +168,9 @@
 			/**
 			 * 定时启动
 			 */
+			bindTimeChange: function(e) {
+			           this.time = e.detail.value
+			       },
 			lazyStart() {
 				let aData = new Date();
 				let stHour=aData.getHours();
@@ -158,6 +184,22 @@
 				}
 				var tmp = {
 						command:'6',
+						seconds:value
+					};
+				this.writeBLECharacteristicValue(tmp);
+			},
+			/**
+			 * 自定义持续时间
+			 */
+			bindSusTimeChange: function(e)
+			{
+				this.susTime=e.detail.value;
+			},
+			setSusTime()
+			{
+				var value=this.susTime*60;
+				var tmp = {
+						command:'7',
 						seconds:value
 					};
 				this.writeBLECharacteristicValue(tmp);
