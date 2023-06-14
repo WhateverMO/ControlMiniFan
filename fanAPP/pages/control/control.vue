@@ -21,6 +21,25 @@
 				<button type="primary" :disabled="disabled[11]" @click="threeGear">
 					三档
 				</button>
+				<button type="primary" :disabled="disabled[11]" @click="loopGear">
+					挡位循环
+				</button>
+				<view class="uni-title uni-common-pl">时间选择</view>
+				<view class="uni-list">
+					<view class="uni-list-cell">
+						<view class="uni-list-cell-left">
+									当前选择
+						</view>
+						<view class="uni-list-cell-db">
+							<picker mode="time" :value="time" start="00:00" end="24:00" @change="bindTimeChange">
+								<view class="uni-input">{{time}}</view>
+							</picker>
+						</view>
+					</view>
+				</view>
+				<button type="primary" :disabled="disabled[11]" @click="lazyStart">
+					定时启动
+				</button>
 				<button type="primary" :disabled="disabled[11]" @click="offGear">
 					关闭风扇
 				</button>
@@ -49,7 +68,8 @@
 				characteristicsData: '',
 				valueChangeData: {},
 				isStop: true,
-				list: []
+				list: [],
+				time:"12:00"
 			};
 		},
 		onLoad(option) {
@@ -58,6 +78,9 @@
 			this.characteristicsData = uni.getStorageSync('characteristicId');
 		},
 		methods: {
+			bindTimeChange: function(e) {
+			           this.time = e.detail.value
+			       },
 			str2ab(str) {
 			    var buf = new ArrayBuffer(str.length*2); // 每个字符占用2个字节
 			    var bufView = new Uint8Array(buf);
@@ -107,6 +130,35 @@
 				var tmp = {
 						command:'4',
 						speed:'3'
+					};
+				this.writeBLECharacteristicValue(tmp);
+			},
+			/**
+			 * 挡位循环
+			 */
+			loopGear() {
+				var tmp = {
+						command:'5',
+					};
+				this.writeBLECharacteristicValue(tmp);
+			},
+			/**
+			 * 定时启动
+			 */
+			lazyStart() {
+				let aData = new Date();
+				let stHour=aData.getHours();
+				let stMinute=aData.getMinutes();
+				let endHour=this.time.slice(0,2);
+				let endMinute=this.time.slice(3,5);
+				var value=(parseInt(endHour)*60+parseInt(endMinute)-parseInt(stHour)*60-parseInt(stMinute))*60;
+				if (value<0)
+				{
+					value=0;
+				}
+				var tmp = {
+						command:'6',
+						seconds:value
 					};
 				this.writeBLECharacteristicValue(tmp);
 			},

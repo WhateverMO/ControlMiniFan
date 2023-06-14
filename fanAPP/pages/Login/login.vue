@@ -29,7 +29,6 @@
 				"username": "",
 				"focusUsername":false,
 				"focusPassword":false,
-				
 			}
 		},
 		methods:{
