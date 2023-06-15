@@ -37,6 +37,7 @@ bool oldDeviceConnected = false;             //上次连接状态
 String commandResult;
 int command;
 int speed;
+int seconds;
 bool method;
 String WIFIName;
 String PassWord;
@@ -70,6 +71,7 @@ Robojax_L298N_DC_motor motor(IN1, IN2, ENA, CHA, true); // true为串口调试�
 //-------------------------------------------------------------------------------------------------
 
 class MyServerCallbacks : public BLEServerCallbacks
+#define DEVICE_UUID "E0:5A:1B:A6:3D:8A"
 {
     void onConnect(BLEServer *pServer)
     {
@@ -116,6 +118,7 @@ JsonObject get_jsoncomm(std::string rxvalue)
   commandResult = tmp[String("command")].as<String>();
   command = commandResult.toInt();
   speed = tmp[String("speed")].as<int>();
+  seconds = tmp[String("seconds")].as<int>();
   method = tmp["method"];
   WIFIName = tmp[String("params")][String("wifiname")].as<String>();
   PassWord = tmp[String("params")][String("password")].as<String>();
@@ -280,6 +283,82 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
   }
 }
 //-------------------------------------------------------------------------------------------------
+void shift_gear(){
+  Serial.println("fan has been on (shift gear continuously)");
+  for(int i = 1;i<=100;i++) motor.rotate(motor1, i, CCW);
+  for(int i = 100;i>0;i--) motor.rotate(motor1, i, CCW);
+}
+
+void wait_run(){
+  motor.brake(1);
+  Serial.println("fan has been off");
+  double start = millis();
+  while (true)
+  {
+    Serial.print(".");
+    delay(300);
+    if (millis() - start > 1000 * seconds)
+    {
+      Serial.println("time is up");
+      break;
+   }
+  }
+  motor.rotate(motor1, 10, CCW);
+  Serial.println("fan has been on");
+}
+
+void run_wait(){
+  motor.rotate(motor1, 10, CCW);
+  Serial.println("fan has been on");
+  double start = millis();
+  while (true)
+  {
+    Serial.print(".");
+    delay(300);
+    if (millis() - start > 1000 * seconds)
+    {
+      Serial.println("time is up");
+      break;
+   }
+  }
+  motor.brake(1);
+  Serial.println("fan has been off");
+}
+
+void process_other(){
+
+  switch(command)
+  {
+    case 5:
+    {
+      Serial.println("shift gear continuously");
+      shift_gear();
+    }
+    break;
+    case 6:
+    {
+      Serial.print("wait ");
+      Serial.print(seconds);
+      Serial.println(" seconds to make the fan on");
+      wait_run();
+    }
+    break;
+    case 7:
+    {
+      Serial.print("make the fan on ");
+      Serial.print(seconds);
+      Serial.println(" seconds continuously");
+      run_wait();
+    }
+    break;
+    default:
+    {
+      Serial.println("not effect1");
+    }
+    break;
+  }
+}
+//-------------------------------------------------------------------------------------------------
 void WIFI_Command()
 {
   Serial.println(command);
@@ -330,10 +409,7 @@ void WIFI_Command()
   }
   break;
   default:
-  {
-    Serial.println("not effect1");
- 
-  }
+    process_other();
   break;
   }
 }
@@ -438,6 +514,9 @@ void BLE_command()
     }
   }
   break;
+  default:
+    process_other();
+  break;
  }
 }
 //-------------------------------------------------------------------------------------------------
@@ -511,7 +590,10 @@ class MyCallbacks : public BLECharacteristicCallbacks
 void setup()
 {
     Serial.begin(115200); //设置串口为115200
-
+    // seconds = 3;
+    // shift_gear();
+    // wait_run();
+    // run_wait();
     // 创建一个 BLE 设备
     BLEDevice::init("jj and mw's BLE Device");
 
