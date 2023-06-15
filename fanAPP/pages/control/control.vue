@@ -21,43 +21,70 @@
 				<button type="primary" :disabled="disabled[11]" @click="threeGear">
 					三档
 				</button>
-				<button type="primary" :disabled="disabled[11]" @click="loopGear">
-					挡位循环
-				</button>
-				<view class="uni-title uni-common-pl">时间选择</view>
-				<view class="uni-list">
-					<view class="uni-list-cell">
-						<view class="uni-list-cell-left">
-									当前选择
+				<view>
+					<button type="primary" :disabled="disabled[11]" @click="loopGear">
+						挡位循环
+					</button>
+					<view class="uni-title uni-common-pl">时间选择</view>
+					<view class="uni-list">
+						<view class="uni-list-cell">
+							<view class="uni-list-cell-left">
+										当前选择
+							</view>
+							<view class="uni-list-cell-db">
+								<picker mode="time" :value="time" start="00:00" end="24:00" @change="bindTimeChange">
+									<view class="uni-input">{{time}}</view>
+								</picker>
+							</view>
+							<view class="uni-list-cell-left">
+										时
+							</view>
+							<button type="primary" :disabled="disabled[11]" @click="lazyStart_time">
+								定时启动(按时)
+							</button>
 						</view>
-						<view class="uni-list-cell-db">
-							<picker mode="time" :value="time" start="00:00" end="24:00" @change="bindTimeChange">
-								<view class="uni-input">{{time}}</view>
-							</picker>
+					</view>
+					<view class="uni-title uni-common-pl">按秒定时</view>
+					<view class="uni-list">
+						<view class="uni-list-cell">
+							<view class="uni-list-cell-left">
+										当前选择
+							</view>
+							<view class="uni-list-cell-db">
+								<picker mode="selector" :range="time_range" @change="bindSecondChange">
+									<view class="uni-input">{{lazy_seconds}}</view>
+								</picker>
+							</view>
+							<view class="uni-list-cell-left">
+										秒
+							</view>
+							<button type="primary" :disabled="disabled[11]" @click="lazyStart_sec">
+								定时启动(按秒)
+							</button>
+						</view>
+					</view>
+					<view class="uni-title uni-common-pl">自定义持续时间</view>
+					<view class="uni-list">
+						<view class="uni-list-cell">
+							<view class="uni-list-cell-left">
+										当前选择
+							</view>
+							<view class="uni-list-cell-db">
+								<picker mode="selector" :range="time_range" @change="bindSusTimeChange">
+									<view class="uni-input">{{susTime}}</view>
+								</picker>
+							</view>
+							<view class="uni-list-cell-left">
+										分钟
+							</view>
+							<button type="primary" :disabled="disabled[11]" @click="setSusTime">
+								设置持续时间
+							</button>
 						</view>
 					</view>
 				</view>
-				<button type="primary" :disabled="disabled[11]" @click="lazyStart">
-					定时启动
-				</button>
-				<view class="uni-title uni-common-pl">自定义持续时间</view>
-				<view class="uni-list">
-					<view class="uni-list-cell">
-						<view class="uni-list-cell-left">
-									当前选择
-						</view>
-						<view class="uni-list-cell-db">
-							<picker mode="selector" :range="time_range" @change="bindSusTimeChange">
-								<view class="uni-input">{{susTime}}</view>
-							</picker>
-						</view>
-						<view class="uni-list-cell-left">
-									分钟
-						</view>
-					</view>
-				</view>
-				<button type="primary" :disabled="disabled[11]" @click="setSusTime">
-					设置持续时间
+				<button type="primary" :disabled="disabled[11]" @click="offGear">
+					关闭风扇
 				</button>
 			</view>
 		</view>
@@ -68,7 +95,7 @@
 	export default {
 		data() {
 			var time_range=[];
-			for(let i=0;i<=30;i++)
+			for(let i=0;i<=60;i++)
 			{
 				time_range.push(i);
 			}
@@ -92,7 +119,8 @@
 				list: [],
 				susTime: 0,
 				time:"12:00",
-				time_range:time_range
+				time_range:time_range,
+				lazy_seconds:0
 			};
 		},
 		onLoad(option) {
@@ -171,7 +199,10 @@
 			bindTimeChange: function(e) {
 			           this.time = e.detail.value
 			       },
-			lazyStart() {
+			bindSecondChange: function(e) {
+			           this.lazy_seconds = e.detail.value
+			       },
+			lazyStart_time() {
 				let aData = new Date();
 				let stHour=aData.getHours();
 				let stMinute=aData.getMinutes();
@@ -185,6 +216,13 @@
 				var tmp = {
 						command:'6',
 						seconds:value
+					};
+				this.writeBLECharacteristicValue(tmp);
+			},
+			lazyStart_sec() {
+				var tmp = {
+						command:'6',
+						seconds:parseInt(this.lazy_seconds)
 					};
 				this.writeBLECharacteristicValue(tmp);
 			},
