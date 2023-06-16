@@ -71,7 +71,6 @@ Robojax_L298N_DC_motor motor(IN1, IN2, ENA, CHA, true); // true为串口调试�
 //-------------------------------------------------------------------------------------------------
 
 class MyServerCallbacks : public BLEServerCallbacks
-#define DEVICE_UUID "E0:5A:1B:A6:3D:8A"
 {
     void onConnect(BLEServer *pServer)
     {
@@ -285,8 +284,11 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 //-------------------------------------------------------------------------------------------------
 void shift_gear(){
   Serial.println("fan has been on (shift gear continuously)");
+  motor.brake(1);
   for(int i = 1;i<=100;i++) motor.rotate(motor1, i, CCW);
+  motor.brake(1);
   for(int i = 100;i>0;i--) motor.rotate(motor1, i, CCW);
+  motor.brake(1);
 }
 
 void wait_run(){
@@ -409,7 +411,10 @@ void WIFI_Command()
   }
   break;
   default:
+  {
+    Serial.println("");
     process_other();
+  }
   break;
   }
 }
@@ -590,10 +595,7 @@ class MyCallbacks : public BLECharacteristicCallbacks
 void setup()
 {
     Serial.begin(115200); //设置串口为115200
-    // seconds = 3;
-    // shift_gear();
-    // wait_run();
-    // run_wait();
+
     // 创建一个 BLE 设备
     BLEDevice::init("jj and mw's BLE Device");
 
