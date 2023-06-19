@@ -285,9 +285,15 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
 void shift_gear(){
   Serial.println("fan has been on (shift gear continuously)");
   motor.brake(1);
-  for(int i = 1;i<=100;i++) motor.rotate(motor1, i, CCW);
+  for(int i = 1;i<=100;i++){
+    delay(10);
+    motor.rotate(motor1, i, CCW);
+  }
   motor.brake(1);
-  for(int i = 100;i>0;i--) motor.rotate(motor1, i, CCW);
+  for(int i = 100;i>0;i--){
+    delay(10);
+    motor.rotate(motor1, i, CCW);
+  }
   motor.brake(1);
 }
 
@@ -596,6 +602,23 @@ void setup()
 {
     Serial.begin(115200); //设置串口为115200
 
+    //------------------------------------------------------
+    //风扇马达
+    motor.begin();
+
+    Serial.println("start self-test");
+    
+		seconds = 1;
+		shift_gear();
+		delay(1000);
+		run_wait();
+		delay(1000);
+		wait_run();
+		motor.brake(1);
+		seconds = 0;
+
+    Serial.println("self-test done");
+
     // 创建一个 BLE 设备
     BLEDevice::init("jj and mw's BLE Device");
 
@@ -615,10 +638,7 @@ void setup()
     pServer->getAdvertising()->start(); // 开始广播
     Serial.println(" Waiting... ");
 
-    //------------------------------------------------------
-    //风扇马达
     Serial.begin(115200);
-    motor.begin();
     //------------------------------------------------------
     //WIFI
     connectWIFI();
